@@ -47,7 +47,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		Vector3 resultMultiply = Multiply(k, v1);
 		float resultDot = Dot(v1, v2);
 		float resultLength = Length(v1);
-		/*Vector3 resultNormalize = Normalize(v2);*/
+		Vector3 resultNormalize = Normalize(v2);
 
 		///
 		/// ↑更新処理ここまで
@@ -62,7 +62,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		VectorScreenPrintf(0, kRowHeight*2, resultMultiply," : Multiply");
 		Novice::ScreenPrintf(0, kRowHeight * 3, "%.02f : Dot", resultDot);
 		Novice::ScreenPrintf(0, kRowHeight * 4, "%.02f : Length", resultLength);
-		/*VectorScreenPrintf(0, kRowHeight*5, resultNormalize," : Normalize");*/
+		VectorScreenPrintf(0, kRowHeight*5, resultNormalize," : Normalize");
 
 		///
 		/// ↑描画処理ここまで
@@ -105,14 +105,14 @@ float Dot(const Vector3& v1, const Vector3& v2)
 
 float Length(const Vector3& v)
 {
-		return sqrtf(v.x + v.y + v.z);
+	return sqrtf(v.x * v.x + v.y * v.y + v.z * v.z);
 }
 
-//Vector3 Normalize(const Vector3& v)
-//{
-//	float resultLength = Length(v);
-//	return	Vector3 (v.x,v.y,v.z) / resultLength;
-//}
+Vector3 Normalize(const Vector3& v)
+{
+	float resultLength = Length(v);
+	return	Vector3 (v.x/ resultLength,v.y / resultLength,v.z / resultLength) ;
+}
 
 void VectorScreenPrintf(int x, int y, const Vector3& vector, const char* label)
 {
