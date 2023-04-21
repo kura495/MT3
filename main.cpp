@@ -3,7 +3,7 @@
 #define _USE_MATH_DEFINES
 #include<math.h>
 
-const char kWindowTitle[] = "K022G1060";
+const char kWindowTitle[] = "LE2B_11_クラモト_アツシ_MT3";
 
 Vector3 Add(const Vector3& v1,const Vector3& v2);
 Vector3 Subtract(const Vector3& v1, const Vector3& v2);
