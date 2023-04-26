@@ -64,6 +64,11 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
 Matrix4x4 MakeTranslateMatrix(const Vector3& translate)
 {
+	Matrix4x4 result = {
+
+
+
+	};
 	return Matrix4x4();
 }
 
