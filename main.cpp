@@ -2,9 +2,13 @@
 #include<Vector3.h>
 #define _USE_MATH_DEFINES
 #include<math.h>
-
+#include<Matrix4x4.h>
+#include<Vector3.h>
 const char kWindowTitle[] = "LE2B_11_クラモト_アツシ_MT3";
 
+Matrix4x4 MakeTranslateMatrix(const Vector3& translate);
+Matrix4x4 MakeScaleMatrix(const Vector3& scale);
+Vector3 Transform(const Vector3& vector,const Matrix4x4&matrix);
 
 // Windowsアプリでのエントリーポイント(main関数)
 int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
@@ -56,4 +60,19 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	// ライブラリの終了
 	Novice::Finalize();
 	return 0;
+}
+
+Matrix4x4 MakeTranslateMatrix(const Vector3& translate)
+{
+	return Matrix4x4();
+}
+
+Matrix4x4 MakeScaleMatrix(const Vector3& scale)
+{
+	return Matrix4x4();
+}
+
+Vector3 Transform(const Vector3& vector, const Matrix4x4& matrix)
+{
+	return Vector3();
 }
