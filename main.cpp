@@ -10,6 +10,9 @@ const char kWindowTitle[] = "LE2B_11_クラモト_アツシ_MT3";
 Matrix4x4 MakeTranslateMatrix(const Vector3& translate);
 Matrix4x4 MakeScaleMatrix(const Vector3& scale);
 Vector3 Transform(const Vector3& vector,const Matrix4x4&matrix);
+static const int kRowHeight = 20;
+static const int kColumnWidth = 60;
+void MatrixScreenPrintf(int x, int y, const Matrix4x4& matrix, const char* Tag);
 void VectorScreenPrintf(int x, int y, const Vector3& vector, const char* label);
 
 // Windowsアプリでのエントリーポイント(main関数)
