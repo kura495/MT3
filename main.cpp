@@ -2,8 +2,11 @@
 #include<Vector3.h>
 #define _USE_MATH_DEFINES
 #include<math.h>
-
+#include<Matrix4x4.h>
+#include<>
 const char kWindowTitle[] = "LE2B_11_クラモト_アツシ_MT3";
+
+Matrix4x4 MakeScaleMatrix(const Vector3& scale);
 
 
 // Windowsアプリでのエントリーポイント(main関数)
