@@ -3,11 +3,15 @@
 #define _USE_MATH_DEFINES
 #include<math.h>
 #include<Matrix4x4.h>
-#include<>
+#include<cmath>
 const char kWindowTitle[] = "LE2B_11_クラモト_アツシ_MT3";
 
 Matrix4x4 MakeScaleMatrix(const Vector3& scale);
 
+
+static const int kRowHeight = 20;
+static const int kColumnWidth = 60;
+void MatrixScreenPrintf(int x, int y, const Matrix4x4& matrix, const char* Tag);
 
 // Windowsアプリでのエントリーポイント(main関数)
 int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
