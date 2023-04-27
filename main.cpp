@@ -2,9 +2,13 @@
 #include<Vector3.h>
 #define _USE_MATH_DEFINES
 #include<math.h>
-
+#include<cmath>
+#include<Matrix4x4.h>
 const char kWindowTitle[] = "LE2B_11_クラモト_アツシ_MT3";
 
+Matrix4x4 MakeRotateXMatrix(float radian);
+Matrix4x4 MakeRotateYMatrix(float radian);
+Matrix4x4 MakeRotateZMatrix(float radian);
 
 // Windowsアプリでのエントリーポイント(main関数)
 int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
@@ -56,4 +60,37 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	// ライブラリの終了
 	Novice::Finalize();
 	return 0;
+}
+
+Matrix4x4 MakeRotateXMatrix(float radian)
+{
+	Matrix4x4 result = {
+		1.0f,0.0f,0.0f,0.0f,
+		0.0f,std::cos(radian),std::sin(radian),0.0f,
+		0.0f,-std::sin(radian),std::cos(radian),0.0f,
+		0.0f,0.0f,0.0f,1.0f
+	};
+	return result;
+}
+
+Matrix4x4 MakeRotateYMatrix(float radian)
+{
+	Matrix4x4 result = {
+		std::cos(radian),0.0f,-std::sin(radian),0.0f,
+		0.0f,1.0f,0.0f,0.0f,
+		std::sin(radian),0.0f,std::cos(radian),0.0f,
+		0.0f,0.0f,0.0f,1.0f
+	};
+	return result;
+}
+
+Matrix4x4 MakeRotateZMatrix(float radian)
+{
+	Matrix4x4 result = {
+		std::cos(radian),std::sin(radian),0.0f,0.0f,
+		-std::sin(radian),std::cos(radian),0.0f,0.0f,
+		0.0f,0.0f,1.0f,0.0f,
+		0.0f,0.0f,0.0f,1.0f
+	};
+	return result;
 }
