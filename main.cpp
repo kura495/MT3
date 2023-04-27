@@ -9,7 +9,7 @@ const char kWindowTitle[] = "LE2B_11_クラモト_アツシ_MT3";
 
 Matrix4x4 MakeTranslateMatrix(const Vector3& translate);
 Matrix4x4 MakeScaleMatrix(const Vector3& scale);
-Vector3 Transform(const Vector3& vector,const Matrix4x4&matrix);
+Vector3 Transformed(const Vector3& vector,const Matrix4x4&matrix);
 static const int kRowHeight = 20;
 static const int kColumnWidth = 60;
 void MatrixScreenPrintf(int x, int y, const Matrix4x4& matrix, const char* Tag);
@@ -30,6 +30,18 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		// フレームの開始
 		Novice::BeginFrame();
 
+		Vector3 translate{ 4.1f,2.6f,0.8f };
+		Vector3 scale{ 1.5f,5.2f,7.3f };
+		Matrix4x4 translateMatrix = MakeTranslateMatrix(translate);
+		Matrix4x4 scaleMatrix = MakeScaleMatrix(scale);
+		Vector3 point{ 2.3f,3.8f,1.4f };
+		Matrix4x4 transformMatrix = {
+			1.0f,2.0f,3.0f,4.0f,
+			3.0f,1.0f,1.0f,2.0f,
+			1.0f,4.0f,2.0f,3.0f,
+			2.0f,2.0f,1.0f,3.0f,
+		};
+		Vector3 transformed = Transformed(point,transformMatrix);
 		// キー入力を受け取る
 		memcpy(preKeys, keys, 256);
 		Novice::GetHitKeyStateAll(keys);
@@ -48,6 +60,9 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		/// ↓描画処理ここから
 		///
 
+		VectorScreenPrintf(0, 0, transformed, "transformedMatrix");
+		MatrixScreenPrintf(0, 24, translateMatrix, "translateMatrix");
+		MatrixScreenPrintf(0, kRowHeight*5+24, scaleMatrix, "scaleMatrix");
 
 		///
 		/// ↑描画処理ここまで
@@ -89,7 +104,7 @@ Matrix4x4 MakeScaleMatrix(const Vector3& scale)
 	return result;
 }
 
-Vector3 Transform(const Vector3& vector, const Matrix4x4& matrix)
+Vector3 Transformed(const Vector3& vector, const Matrix4x4& matrix)
 {	
 	Vector3 result;
 	result.x = vector.x * matrix.m[0][0] + vector.y * matrix.m[1][0] + vector.z * matrix.m[2][0] + 1.0f * matrix.m[3][0];
