@@ -10,6 +10,7 @@ const char kWindowTitle[] = "LE2B_11_クラモト_アツシ_MT3";
 Matrix4x4 MakeTranslateMatrix(const Vector3& translate);
 Matrix4x4 MakeScaleMatrix(const Vector3& scale);
 Vector3 Transform(const Vector3& vector,const Matrix4x4&matrix);
+void VectorScreenPrintf(int x, int y, const Vector3& vector, const char* label);
 
 // Windowsアプリでのエントリーポイント(main関数)
 int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
@@ -98,5 +99,11 @@ Vector3 Transform(const Vector3& vector, const Matrix4x4& matrix)
 	result.z /= W;
 	return result;
 }
-
+void VectorScreenPrintf(int x, int y, const Vector3& vector, const char* label)
+{
+	Novice::ScreenPrintf(x, y, "%.02f", vector.x);
+	Novice::ScreenPrintf(x + kColumnWidth, y, "%.02f", vector.y);
+	Novice::ScreenPrintf(x + kColumnWidth * 2, y, "%.02f", vector.z);
+	Novice::ScreenPrintf(x + kColumnWidth * 3, y, "%s", label);
+}
 
