@@ -3,12 +3,12 @@
 #define _USE_MATH_DEFINES
 #include<math.h>
 #include"Matrix4x4.h"
-
+#include<cmath>
 const char kWindowTitle[] = "LE2B_11_クラモト_アツシ_MT3";
 
 //正射影行列
 Matrix4x4 MakeOrthographicMatrix(float left, float top,float right, float bottom, float nearClip, float farClip);
-//投資投影行列
+//透視投影行列
 Matrix4x4 MakePerspectiveFovMatrix(float FovY, float aspectRatio, float nearClip, float farClip);
 //ビューポート変換行列
 Matrix4x4 MakeViewportMatrix(float left, float top, float width, float height, float minDepth, float maxDepth);
@@ -89,8 +89,8 @@ Matrix4x4 MakeOrthographicMatrix(float left, float top, float right, float botto
 Matrix4x4 MakePerspectiveFovMatrix(float FovY, float aspectRatio, float nearClip, float farClip)
 {
 	Matrix4x4 result = {
-	(1 / FovY) * cot(aspectRatio),0,0,0,
-	0,cot(aspectRatio),0,0,
+	(1 / aspectRatio) * cot(FovY /2),0,0,0,
+	0,cot(FovY /2),0,0,
 	0,0,farClip / (farClip - nearClip),1,
 	0,0,(-nearClip * farClip) / (farClip - nearClip),0
 	};
@@ -112,7 +112,7 @@ Matrix4x4 MakeViewportMatrix(float left, float top, float width, float height, f
 
 float cot(float top)
 {
-	float result= 2/(float)tan(top);
+	float result= 1/tan(top);
 	return result;
 }
 
