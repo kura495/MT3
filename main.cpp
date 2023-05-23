@@ -6,9 +6,11 @@
 #include<cmath>
 #include<cassert>
 const char kWindowTitle[] = "LE2B_11_クラモト_アツシ_MT3";
-
+int kWindowWidth = 1280;
+int kWindowHeight = 720;
 Matrix4x4 Multiply(const Matrix4x4& m1, const Matrix4x4& m2);
 Matrix4x4 Inverse(const Matrix4x4& m);
+float det(const Matrix4x4& m);
 Matrix4x4 MakeScaleMatrix(const Vector3& scale);
 Matrix4x4 MakeRotateXMatrix(float radian);
 Matrix4x4 MakeRotateYMatrix(float radian);
@@ -25,6 +27,11 @@ float cot(float top);
 static const int kRowHeight = 20;
 static const int kColumnWidth = 60;
 void MatrixScreenPrintf(int x, int y, const Matrix4x4& matrix, const char* Tag);
+void VectorScreenPrintf(int x, int y, const Vector3& vector, const char* Tag)
+
+Vector3 v1{ 1.2f,-3.9f,2.5f };
+Vector3 v2{ 2.8f,0.4f,-1.3f };
+
 
 // Windowsアプリでのエントリーポイント(main関数)
 int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
@@ -41,10 +48,13 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		// フレームの開始
 		Novice::BeginFrame();
 
-		Vector3 scale{ 1.2f,0.79f,-2.1f };
 		Vector3 rotate{};
 		Vector3 translate{};
-		Matrix4x4 worldMatrix = MakeAffineMatrix(scale, rotate, translate);
+		Vector3 cameraPosition{0.0f,0.0f,0.0f};
+		Vector3 kLocalVerices[3];
+		kLocalVerices[0] = {640.0f,120.0f,0.0f};
+		kLocalVerices[1] = {980.0f,480.0f,0.0f};
+		kLocalVerices[2] = {280.0f,480.0f,0.0f};
 
 		// キー入力を受け取る
 		memcpy(preKeys, keys, 256);
@@ -55,7 +65,17 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		///
 
 		Matrix4x4 worldMatrix = MakeAffineMatrix({1.0f,1.0f,1.0f},rotate,translate);
-		Matrix4x4 cameraMatrix = MakeAffineMatrix({1.0f,1.0f,1.0f},{0.0f,0.0f,0.0f},);
+		Matrix4x4 cameraMatrix = MakeAffineMatrix({1.0f,1.0f,1.0f},{0.0f,0.0f,0.0f}, cameraPosition);
+		Matrix4x4 viewMatrix = Inverse(cameraMatrix);
+		Matrix4x4 projectionMatrix = MakePerspectiveFovMatrix(0.45f, float(kWindowWidth) / float(kWindowHeight), 0.1f, 100.0f);
+		Matrix4x4 WorldViewProjectionMatrix = Multiply(worldMatrix, Multiply(viewMatrix, projectionMatrix));
+		Matrix4x4 viewportMatrix = MakeViewportMatrix(0, 0, float(kWindowWidth), float(kWindowHeight), 0.0f, 1.0f);
+		Vector3 screenVertices[3];
+		for (uint32_t i = 0; i < 3; ++i) {
+			Vector3 ndcVertex = Transformed(kLocalVerices[i], WorldViewProjectionMatrix);
+			screenVertices[i] = Transformed(ndcVertex,viewportMatrix);
+		}
+
 
 		///
 		/// ↑更新処理ここまで
@@ -65,7 +85,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		/// ↓描画処理ここから
 		///
 
-		MatrixScreenPrintf(0, 0, worldMatrix, "worldMatrix");
+		Novice::DrawTriangle(int(screenVertices[0].x), int(screenVertices[0].y), int(screenVertices[1].x), int(screenVertices[1].y), int(screenVertices[2].x), int(screenVertices[2].y), RED, kFillModeSolid);
 
 		///
 		/// ↑描画処理ここまで
@@ -124,6 +144,36 @@ Matrix4x4 Inverse(const Matrix4x4& m)
 	result.m[3][3] = (m.m[0][0] * m.m[1][1] * m.m[2][2] + m.m[0][1] * m.m[1][2] * m.m[2][0] + m.m[0][2] * m.m[1][0] * m.m[2][1]
 		- m.m[0][2] * m.m[1][1] * m.m[2][0] - m.m[0][1] * m.m[1][0] * m.m[2][2] - m.m[0][0] * m.m[1][2] * m.m[2][1]) / resultDet;
 	return result;
+}
+
+float det(const Matrix4x4& m)
+{
+	return float(
+		m.m[0][0] * m.m[1][1] * m.m[2][2] * m.m[3][3]
+		+ m.m[0][0] * m.m[1][2] * m.m[2][3] * m.m[3][1]
+		+ m.m[0][0] * m.m[1][3] * m.m[2][1] * m.m[3][2] //3行目
+		- m.m[0][0] * m.m[1][3] * m.m[2][2] * m.m[3][1]
+		- m.m[0][0] * m.m[1][2] * m.m[2][1] * m.m[3][3]
+		- m.m[0][0] * m.m[1][1] * m.m[2][3] * m.m[3][2] //6行目
+		- m.m[0][1] * m.m[1][0] * m.m[2][2] * m.m[3][3]
+		- m.m[0][2] * m.m[1][0] * m.m[2][3] * m.m[3][1]
+		- m.m[0][3] * m.m[1][0] * m.m[2][1] * m.m[3][2] //9行目
+		+ m.m[0][3] * m.m[1][0] * m.m[2][2] * m.m[3][1]
+		+ m.m[0][2] * m.m[1][0] * m.m[2][1] * m.m[3][3]
+		+ m.m[0][1] * m.m[1][0] * m.m[2][3] * m.m[3][2] //12行目
+		+ m.m[0][1] * m.m[1][2] * m.m[2][0] * m.m[3][3]
+		+ m.m[0][2] * m.m[1][3] * m.m[2][0] * m.m[3][1]
+		+ m.m[0][3] * m.m[1][1] * m.m[2][0] * m.m[3][2] //15行目
+		- m.m[0][3] * m.m[1][2] * m.m[2][0] * m.m[3][1]
+		- m.m[0][2] * m.m[1][1] * m.m[2][0] * m.m[3][3]
+		- m.m[0][1] * m.m[1][3] * m.m[2][0] * m.m[3][2] //18行目
+		- m.m[0][1] * m.m[1][2] * m.m[2][3] * m.m[3][0]
+		- m.m[0][2] * m.m[1][3] * m.m[2][1] * m.m[3][0]
+		- m.m[0][3] * m.m[1][1] * m.m[2][2] * m.m[3][0] //21行目
+		+ m.m[0][3] * m.m[1][2] * m.m[2][1] * m.m[3][0]
+		+ m.m[0][2] * m.m[1][1] * m.m[2][3] * m.m[3][0]
+		+ m.m[0][1] * m.m[1][3] * m.m[2][2] * m.m[3][0] //24行目
+		);
 }
 
 Matrix4x4 MakeScaleMatrix(const Vector3& scale)
@@ -268,4 +318,13 @@ void MatrixScreenPrintf(int x, int y, const Matrix4x4& matrix, const char* Tag)
 			Novice::ScreenPrintf(x + column * kColumnWidth, y + row * kRowHeight + 24, "%6.02f", matrix.m[row][column]);
 		}
 	}
+}
+
+void VectorScreenPrintf(int x, int y, const Vector3& vector, const char* Tag) {
+	Novice::ScreenPrintf(x + kColumnWidth * 0, y, "%6.02f", vector.x);
+	Novice::ScreenPrintf(x + kColumnWidth * 1, y, "%6.02f", vector.y);
+	Novice::ScreenPrintf(x + kColumnWidth * 2, y, "%6.02f", vector.z);
+
+	Novice::ScreenPrintf(x + kColumnWidth * 4, y, "%s", Tag);
+
 }
