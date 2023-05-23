@@ -4,6 +4,7 @@
 #include<math.h>
 #include<Matrix4x4.h>
 #include<cmath>
+#include<css>
 const char kWindowTitle[] = "LE2B_11_クラモト_アツシ_MT3";
 
 Matrix4x4 Multiply(const Matrix4x4& m1, const Matrix4x4& m2);
@@ -12,6 +13,7 @@ Matrix4x4 MakeRotateXMatrix(float radian);
 Matrix4x4 MakeRotateYMatrix(float radian);
 Matrix4x4 MakeRotateZMatrix(float radian);
 Matrix4x4 MakeTranslateMatrix(const Vector3& translate);
+Vector3 Transformed(const Vector3& vector, const Matrix4x4& matrix);
 Matrix4x4 MakeAffineMatrix(const Vector3& scale, const Vector3& rotate, const Vector3& translate);
 //透視投影行列
 Matrix4x4 MakePerspectiveFovMatrix(float FovY, float aspectRatio, float nearClip, float farClip);
@@ -133,6 +135,20 @@ Matrix4x4 MakeTranslateMatrix(const Vector3& translate)
 		0.0f,0.0f,1.0f,0.0f,
 		translate.x,translate.y,translate.z,1.0f,
 	};
+	return result;
+}
+
+Vector3 Transformed(const Vector3& vector, const Matrix4x4& matrix)
+{
+	Vector3 result;
+	result.x = vector.x * matrix.m[0][0] + vector.y * matrix.m[1][0] + vector.z * matrix.m[2][0] + 1.0f * matrix.m[3][0];
+	result.y = vector.x * matrix.m[0][1] + vector.y * matrix.m[1][1] + vector.z * matrix.m[2][1] + 1.0f * matrix.m[3][1];
+	result.z = vector.x * matrix.m[0][2] + vector.y * matrix.m[1][2] + vector.z * matrix.m[2][2] + 1.0f * matrix.m[3][2];
+	float W = vector.x * matrix.m[0][3] + vector.y * matrix.m[1][3] + vector.z * matrix.m[2][3] + 1.0f * matrix.m[3][3];
+	assert(W != 0.0f);
+	result.x /= W;
+	result.y /= W;
+	result.z /= W;
 	return result;
 }
 
