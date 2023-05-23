@@ -24,14 +24,17 @@ Matrix4x4 MakePerspectiveFovMatrix(float FovY, float aspectRatio, float nearClip
 Matrix4x4 MakeViewportMatrix(float left, float top, float width, float height, float minDepth, float maxDepth);
 //cotangent関数
 float cot(float top);
+Vector3 Cross(const Vector3& v1,const Vector3&v2);
 static const int kRowHeight = 20;
 static const int kColumnWidth = 60;
 void MatrixScreenPrintf(int x, int y, const Matrix4x4& matrix, const char* Tag);
-void VectorScreenPrintf(int x, int y, const Vector3& vector, const char* Tag)
+void VectorScreenPrintf(int x, int y, const Vector3& vector, const char* Tag);
 
-Vector3 v1{ 1.2f,-3.9f,2.5f };
-Vector3 v2{ 2.8f,0.4f,-1.3f };
+Vector3 vector1{ 1.2f,-3.9f,2.5f };
+Vector3 vector2{ 2.8f,0.4f,-1.3f };
+Vector3 cross = Cross(vector1, vector2);
 
+Vector3 screenVertices[3];
 
 // Windowsアプリでのエントリーポイント(main関数)
 int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
@@ -48,13 +51,13 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		// フレームの開始
 		Novice::BeginFrame();
 
-		Vector3 rotate{};
-		Vector3 translate{};
-		Vector3 cameraPosition{0.0f,0.0f,0.0f};
+		Vector3 rotate{ 1.0f,1.0f,1.0f };
+		Vector3 translate{ 1.0f,1.0f,1.0f };
+		Vector3 cameraPosition{1.0f,1.0f,1.0f};
 		Vector3 kLocalVerices[3];
-		kLocalVerices[0] = {640.0f,120.0f,0.0f};
-		kLocalVerices[1] = {980.0f,480.0f,0.0f};
-		kLocalVerices[2] = {280.0f,480.0f,0.0f};
+		kLocalVerices[0] = {15.0f,200.0f,1.0f};
+		kLocalVerices[1] = {20.0f,100.0f,1.0f};
+		kLocalVerices[2] = {20.0f,100.0f,1.0f};
 
 		// キー入力を受け取る
 		memcpy(preKeys, keys, 256);
@@ -70,12 +73,11 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		Matrix4x4 projectionMatrix = MakePerspectiveFovMatrix(0.45f, float(kWindowWidth) / float(kWindowHeight), 0.1f, 100.0f);
 		Matrix4x4 WorldViewProjectionMatrix = Multiply(worldMatrix, Multiply(viewMatrix, projectionMatrix));
 		Matrix4x4 viewportMatrix = MakeViewportMatrix(0, 0, float(kWindowWidth), float(kWindowHeight), 0.0f, 1.0f);
-		Vector3 screenVertices[3];
+		
 		for (uint32_t i = 0; i < 3; ++i) {
-			Vector3 ndcVertex = Transformed(kLocalVerices[i], WorldViewProjectionMatrix);
-			screenVertices[i] = Transformed(ndcVertex,viewportMatrix);
+			Vector3 ndcVertices = Transformed(kLocalVerices[i], WorldViewProjectionMatrix);
+			screenVertices[i] = Transformed(ndcVertices,viewportMatrix);
 		}
-
 
 		///
 		/// ↑更新処理ここまで
@@ -86,6 +88,8 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		///
 
 		Novice::DrawTriangle(int(screenVertices[0].x), int(screenVertices[0].y), int(screenVertices[1].x), int(screenVertices[1].y), int(screenVertices[2].x), int(screenVertices[2].y), RED, kFillModeSolid);
+
+		VectorScreenPrintf(0, 0, cross, "Cross");
 
 		///
 		/// ↑描画処理ここまで
@@ -307,6 +311,12 @@ Matrix4x4 MakeViewportMatrix(float left, float top, float width, float height, f
 float cot(float top)
 {
 	float result = 1 / tan(top);
+	return result;
+}
+
+Vector3 Cross(const Vector3& v1, const Vector3& v2)
+{
+	Vector3 result = { v1.y * v2.z - v1.z * v2.y, v1.z * v2.x - v1.x * v2.z, v1.x * v2.y - v1.y * v2.x };
 	return result;
 }
 
