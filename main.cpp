@@ -97,8 +97,6 @@ Matrix4x4 MakePerspectiveFovMatrix(float FovY, float aspectRatio, float nearClip
 	return result;
 }
 
-
-
 Matrix4x4 MakeViewportMatrix(float left, float top, float width, float height, float minDepth, float maxDepth)
 {
 	Matrix4x4 result = {
