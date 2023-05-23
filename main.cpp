@@ -167,6 +167,34 @@ Matrix4x4 Multiply(const Matrix4x4& m1, const Matrix4x4& m2)
 	return  result;
 }
 
+Matrix4x4 MakePerspectiveFovMatrix(float FovY, float aspectRatio, float nearClip, float farClip)
+{
+	Matrix4x4 result = {
+	(1 / aspectRatio) * cot(FovY / 2),0,0,0,
+	0,cot(FovY / 2),0,0,
+	0,0,farClip / (farClip - nearClip),1,
+	0,0,(-nearClip * farClip) / (farClip - nearClip),0
+	};
+	return result;
+}
+
+Matrix4x4 MakeViewportMatrix(float left, float top, float width, float height, float minDepth, float maxDepth)
+{
+	Matrix4x4 result = {
+	width / 2,0,0,0,
+	0,-(height / 2),0,0,
+	0,0,maxDepth - minDepth,0,
+	left + (width / 2),top + (height / 2),minDepth,1
+	};
+	return result;
+}
+
+float cot(float top)
+{
+	float result = 1 / tan(top);
+	return result;
+}
+
 void MatrixScreenPrintf(int x, int y, const Matrix4x4& matrix, const char* Tag)
 {
 	Novice::ScreenPrintf(x, y, Tag);
