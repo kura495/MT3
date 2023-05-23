@@ -41,8 +41,8 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		Novice::BeginFrame();
 
 		Vector3 scale{ 1.2f,0.79f,-2.1f };
-		Vector3 rotate{ 0.4f,1.43f,-0.8f };
-		Vector3 translate{ 2.7f,-4.15f,1.57f };
+		Vector3 rotate{};
+		Vector3 translate{};
 		Matrix4x4 worldMatrix = MakeAffineMatrix(scale, rotate, translate);
 
 		// キー入力を受け取る
@@ -53,7 +53,8 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		/// ↓更新処理ここから
 		///
 
-
+		Matrix4x4 worldMatrix = MakeAffineMatrix({1.0f,1.0f,1.0f},rotate,translate);
+		Matrix4x4 cameraMatrix = MakeAffineMatrix({1.0f,1.0f,1.0f},{0.0f,0.0f,0.0f},);
 
 		///
 		/// ↑更新処理ここまで
