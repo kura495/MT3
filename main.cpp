@@ -4,7 +4,7 @@
 #include<math.h>
 #include<Matrix4x4.h>
 #include<cmath>
-#include<>
+#include<cassert>
 const char kWindowTitle[] = "LE2B_11_クラモト_アツシ_MT3";
 
 Matrix4x4 Multiply(const Matrix4x4& m1, const Matrix4x4& m2);
