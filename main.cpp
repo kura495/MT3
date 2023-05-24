@@ -46,13 +46,13 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	char keys[256] = {0};
 	char preKeys[256] = {0};
 	
-	Vector3 rotate{ 1.0f,1.0f,1.0f };
-	Vector3 translate{ 1.0f,1.0f,1.0f };
-	Vector3 cameraPosition{1.0f,1.0f,1.0f};
+	Vector3 rotate{};
+	Vector3 translate{};
+	Vector3 cameraPosition{0.0f,0.0f,10.0f};
 	Vector3 kLocalVerices[3];
-	kLocalVerices[0] = {15.0f,200.0f,1.0f};
-	kLocalVerices[1] = {20.0f,100.0f,1.0f};
-	kLocalVerices[2] = {20.0f,100.0f,1.0f};
+	kLocalVerices[0] = {0.0f,0.0f,0.0f};
+	kLocalVerices[1] = {1.0f,-1.0f,0.0f};
+	kLocalVerices[2] = {-1.0f,-1.0f,0.0f};
 
 	// ウィンドウの×ボタンが押されるまでループ
 	while (Novice::ProcessMessage() == 0) {
