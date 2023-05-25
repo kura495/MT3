@@ -8,6 +8,7 @@
 const char kWindowTitle[] = "LE2B_11_クラモト_アツシ_MT3";
 int kWindowWidth = 1280;
 int kWindowHeight = 720;
+Vector3 Add(const Vector3& v1, const Vector3& v2);
 Matrix4x4 Multiply(const Matrix4x4& m1, const Matrix4x4& m2);
 Matrix4x4 Inverse(const Matrix4x4& m);
 float det(const Matrix4x4& m);
@@ -51,8 +52,8 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	Vector3 cameraPosition{0.0f,0.0f,10.0f};
 	Vector3 kLocalVerices[3];
 	kLocalVerices[0] = {0.0f,0.0f,0.0f};
-	kLocalVerices[1] = {1.0f,-1.0f,0.0f};
-	kLocalVerices[2] = {-1.0f,-1.0f,0.0f};
+	kLocalVerices[1] = {1.0f,1.0f,0.0f};
+	kLocalVerices[2] = {-1.0f,1.0f,0.0f};
 
 	// ウィンドウの×ボタンが押されるまでループ
 	while (Novice::ProcessMessage() == 0) {
@@ -66,6 +67,24 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		///
 		/// ↓更新処理ここから
 		///
+
+		//Y軸回転をさせる
+		rotate.y += 0.08f;
+		//移動
+		Vector3 moveVector = {0,0,0};
+		if (keys[DIK_W]) {
+			moveVector.y = -0.02f;
+		}
+		if (keys[DIK_S]) {
+			moveVector.y = 0.02f;
+		}
+		if (keys[DIK_A]) {
+			moveVector.x = 0.02f;
+		}
+		if (keys[DIK_D]) {
+			moveVector.x = -0.02f;
+		}
+		translate =Add(translate,moveVector);
 
 		Matrix4x4 worldMatrix = MakeAffineMatrix({1.0f,1.0f,1.0f},rotate,translate);
 		Matrix4x4 cameraMatrix = MakeAffineMatrix({1.0f,1.0f,1.0f},{0.0f,0.0f,0.0f}, cameraPosition);
@@ -257,6 +276,11 @@ Matrix4x4 MakeAffineMatrix(const Vector3& scale, const Vector3& rotate, const Ve
 	Matrix4x4 result = Multiply(Scaleresult, Multiply(Rotateresult, Transformresult));
 
 	return result;
+}
+
+Vector3 Add(const Vector3& v1, const Vector3& v2)
+{
+	return Vector3(v1.x+v2.x,v1.y+v2.y,v1.z+v2.z);
 }
 
 Matrix4x4 Multiply(const Matrix4x4& m1, const Matrix4x4& m2)
