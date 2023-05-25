@@ -26,6 +26,7 @@ Matrix4x4 MakeViewportMatrix(float left, float top, float width, float height, f
 //cotangent関数
 float cot(float top);
 Vector3 Cross(const Vector3& v1,const Vector3&v2);
+Vector3 Cross
 static const int kRowHeight = 20;
 static const int kColumnWidth = 60;
 void MatrixScreenPrintf(int x, int y, const Matrix4x4& matrix, const char* Tag);
@@ -105,7 +106,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		///
 		/// ↓描画処理ここから
 		///
-
+		if(cameraPosition*(Cross(screenVertices[0], screenVertices[1])))
 		Novice::DrawTriangle(int(screenVertices[0].x), int(screenVertices[0].y), int(screenVertices[1].x), int(screenVertices[1].y), int(screenVertices[2].x), int(screenVertices[2].y), RED, kFillModeSolid);
 
 		VectorScreenPrintf(0, 0, cross, "Cross");
