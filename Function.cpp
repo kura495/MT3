@@ -1,4 +1,8 @@
 #include"Function.h"
+Vector3 Add(const Vector3& v1, const Vector3& v2)
+{
+	return Vector3(v1.x + v2.x, v1.y + v2.y, v1.z + v2.z);
+}
 
 Matrix4x4 MakeScaleMatrix(const Vector3& scale)
 {
@@ -138,11 +142,11 @@ void DrawGrid(const Matrix4x4& viewProjectionMatrix, const Matrix4x4& viewportMa
 
 void DrawSphere(const Sphere& sphere, const Matrix4x4& viewProjectionMatrix, const Matrix4x4& viewportMatrix, unsigned int color) {
 	const uint32_t kSubDivision = 30;
-	const float kLonEvery = 2.0f * M_PI / float(kSubDivision);
-	const float kLatEvery = M_PI / float(kSubDivision);
+	const float kLonEvery = 2.0f * (float)M_PI / float(kSubDivision);
+	const float kLatEvery = (float)M_PI / float(kSubDivision);
 
 	for (uint32_t latIndex = 0; latIndex < kSubDivision; ++latIndex) {
-		float lat = -1.0f * M_PI / 2.0f + kLatEvery * latIndex;
+		float lat = -1.0f * (float)M_PI / 2.0f + kLatEvery * latIndex;
 
 		for (uint32_t lonIndex = 0; lonIndex < kSubDivision; ++lonIndex) {
 			float lon = lonIndex * kLonEvery;

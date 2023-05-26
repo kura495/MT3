@@ -6,6 +6,7 @@
 #include<cmath>
 #include<cassert>
 #include"Function.h"
+#include<imGui.h>
 const char kWindowTitle[] = "LE2B_11_クラモト_アツシ_MT3";
 int kWindowWidth = 1280;
 int kWindowHeight = 720;
@@ -44,7 +45,9 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	Vector3 rotate{ 1.0f,1.0f,1.0f };
 	Vector3 translate{ 1.0f,1.0f,1.0f };
 	Vector3 cameraRotate{ 0.26f,0.0f,0.0f };
-	Vector3 cameraPosition{ 0.0f,1.9f,-6.49f };
+	Vector3 cameraTranslate{ 0.0f,1.9f,-6.49f };
+
+	Sphere sphere = { 0.0f,0.0f, 0.0f, 1.0f };
 
 	// ウィンドウの×ボタンが押されるまでループ
 	while (Novice::ProcessMessage() == 0) {
@@ -59,13 +62,19 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		/// ↓更新処理ここから
 		///
 
-		Matrix4x4 worldMatrix = MakeAffineMatrix({1.0f,1.0f,1.0f},rotate,translate);
-		Matrix4x4 cameraMatrix = MakeAffineMatrix({1.0f,1.0f,1.0f},{0.0f,0.0f,0.0f}, cameraPosition);
+		Matrix4x4 worldMatrix = MakeAffineMatrix({1.0f,1.0f,1.0f}, cameraRotate,translate);
+		Matrix4x4 cameraMatrix = MakeAffineMatrix({1.0f,1.0f,1.0f}, {0,0,0}, cameraTranslate);
 		Matrix4x4 viewMatrix = Inverse(cameraMatrix);
 		Matrix4x4 projectionMatrix = MakePerspectiveFovMatrix(0.45f, float(kWindowWidth) / float(kWindowHeight), 0.1f, 100.0f);
 		Matrix4x4 WorldViewProjectionMatrix = Multiply(worldMatrix, Multiply(viewMatrix, projectionMatrix));
 		Matrix4x4 viewportMatrix = MakeViewportMatrix(0, 0, float(kWindowWidth), float(kWindowHeight), 0.0f, 1.0f);
 	
+		ImGui::Begin("window");
+		ImGui::DragFloat3("CameraTranslate", &translate.x, 0.01f);
+		ImGui::DragFloat3("CameraRotate", &cameraRotate.x, 0.01f);
+		ImGui::DragFloat3("SphereCenter", &sphere.center.x, 0.01f);
+		ImGui::DragFloat("SphereRadius", &sphere.radius, 0.01f);
+		ImGui::End();
 
 		///
 		/// ↑更新処理ここまで
@@ -75,8 +84,8 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		/// ↓描画処理ここから
 		///
 
-		Novice::DrawTriangle(int(screenVertices[0].x), int(screenVertices[0].y), int(screenVertices[1].x), int(screenVertices[1].y), int(screenVertices[2].x), int(screenVertices[2].y), RED, kFillModeSolid);
 		DrawGrid(WorldViewProjectionMatrix, viewportMatrix);
+		DrawSphere(sphere, WorldViewProjectionMatrix, viewportMatrix, BLACK);
 
 		///
 		/// ↑描画処理ここまで
