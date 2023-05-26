@@ -5,19 +5,14 @@
 #include<Matrix4x4.h>
 #include<cmath>
 #include<cassert>
+#include"Function.h"
 const char kWindowTitle[] = "LE2B_11_クラモト_アツシ_MT3";
 int kWindowWidth = 1280;
 int kWindowHeight = 720;
-Matrix4x4 Multiply(const Matrix4x4& m1, const Matrix4x4& m2);
+
 Matrix4x4 Inverse(const Matrix4x4& m);
 float det(const Matrix4x4& m);
-Matrix4x4 MakeScaleMatrix(const Vector3& scale);
-Matrix4x4 MakeRotateXMatrix(float radian);
-Matrix4x4 MakeRotateYMatrix(float radian);
-Matrix4x4 MakeRotateZMatrix(float radian);
-Matrix4x4 MakeTranslateMatrix(const Vector3& translate);
-Vector3 Transformed(const Vector3& vector, const Matrix4x4& matrix);
-Matrix4x4 MakeAffineMatrix(const Vector3& scale, const Vector3& rotate, const Vector3& translate);
+
 //透視投影行列
 Matrix4x4 MakePerspectiveFovMatrix(float FovY, float aspectRatio, float nearClip, float farClip);
 //ビューポート変換行列
@@ -48,11 +43,8 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	
 	Vector3 rotate{ 1.0f,1.0f,1.0f };
 	Vector3 translate{ 1.0f,1.0f,1.0f };
-	Vector3 cameraPosition{1.0f,1.0f,1.0f};
-	Vector3 kLocalVerices[3];
-	kLocalVerices[0] = {15.0f,200.0f,1.0f};
-	kLocalVerices[1] = {20.0f,100.0f,1.0f};
-	kLocalVerices[2] = {20.0f,100.0f,1.0f};
+	Vector3 cameraRotate{ 0.26f,0.0f,0.0f };
+	Vector3 cameraPosition{ 0.0f,1.9f,-6.49f };
 
 	// ウィンドウの×ボタンが押されるまでループ
 	while (Novice::ProcessMessage() == 0) {
@@ -73,11 +65,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		Matrix4x4 projectionMatrix = MakePerspectiveFovMatrix(0.45f, float(kWindowWidth) / float(kWindowHeight), 0.1f, 100.0f);
 		Matrix4x4 WorldViewProjectionMatrix = Multiply(worldMatrix, Multiply(viewMatrix, projectionMatrix));
 		Matrix4x4 viewportMatrix = MakeViewportMatrix(0, 0, float(kWindowWidth), float(kWindowHeight), 0.0f, 1.0f);
-		
-		for (uint32_t i = 0; i < 3; ++i) {
-			Vector3 ndcVertices = Transformed(kLocalVerices[i], WorldViewProjectionMatrix);
-			screenVertices[i] = Transformed(ndcVertices,viewportMatrix);
-		}
+	
 
 		///
 		/// ↑更新処理ここまで
@@ -88,8 +76,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		///
 
 		Novice::DrawTriangle(int(screenVertices[0].x), int(screenVertices[0].y), int(screenVertices[1].x), int(screenVertices[1].y), int(screenVertices[2].x), int(screenVertices[2].y), RED, kFillModeSolid);
-
-		VectorScreenPrintf(0, 0, cross, "Cross");
+		DrawGrid(WorldViewProjectionMatrix, viewportMatrix);
 
 		///
 		/// ↑描画処理ここまで
@@ -180,111 +167,9 @@ float det(const Matrix4x4& m)
 		);
 }
 
-Matrix4x4 MakeScaleMatrix(const Vector3& scale)
-{
-	Matrix4x4 result = {
-		scale.x,0.0f,0.0f,0.0f,
-		0.0f,scale.y,0.0f,0.0f,
-		0.0f,0.0f,scale.z,0.0f,
-		0.0f,0.0f,0.0f,1.0f,
-	};
-	return result;
-}
 
-Matrix4x4 MakeRotateXMatrix(float radian)
-{
-	Matrix4x4 result = {
-		1.0f,0.0f,0.0f,0.0f,
-		0.0f,std::cos(radian),std::sin(radian),0.0f,
-		0.0f,-std::sin(radian),std::cos(radian),0.0f,
-		0.0f,0.0f,0.0f,1.0f
-	};
-	return result;
-}
 
-Matrix4x4 MakeRotateYMatrix(float radian)
-{
-	Matrix4x4 result = {
-		std::cos(radian),0.0f,-std::sin(radian),0.0f,
-		0.0f,1.0f,0.0f,0.0f,
-		std::sin(radian),0.0f,std::cos(radian),0.0f,
-		0.0f,0.0f,0.0f,1.0f
-	};
-	return result;
-}
 
-Matrix4x4 MakeRotateZMatrix(float radian)
-{
-	Matrix4x4 result = {
-		std::cos(radian),std::sin(radian),0.0f,0.0f,
-		-std::sin(radian),std::cos(radian),0.0f,0.0f,
-		0.0f,0.0f,1.0f,0.0f,
-		0.0f,0.0f,0.0f,1.0f
-	};
-	return result;
-}
-
-Matrix4x4 MakeTranslateMatrix(const Vector3& translate)
-{
-	Matrix4x4 result = {
-		1.0f,0.0f,0.0f,0.0f,
-		0.0f,1.0f,0.0f,0.0f,
-		0.0f,0.0f,1.0f,0.0f,
-		translate.x,translate.y,translate.z,1.0f,
-	};
-	return result;
-}
-
-Vector3 Transformed(const Vector3& vector, const Matrix4x4& matrix)
-{
-	Vector3 result;
-	result.x = vector.x * matrix.m[0][0] + vector.y * matrix.m[1][0] + vector.z * matrix.m[2][0] + 1.0f * matrix.m[3][0];
-	result.y = vector.x * matrix.m[0][1] + vector.y * matrix.m[1][1] + vector.z * matrix.m[2][1] + 1.0f * matrix.m[3][1];
-	result.z = vector.x * matrix.m[0][2] + vector.y * matrix.m[1][2] + vector.z * matrix.m[2][2] + 1.0f * matrix.m[3][2];
-	float W = vector.x * matrix.m[0][3] + vector.y * matrix.m[1][3] + vector.z * matrix.m[2][3] + 1.0f * matrix.m[3][3];
-	assert(W != 0.0f);
-	result.x /= W;
-	result.y /= W;
-	result.z /= W;
-	return result;
-}
-
-Matrix4x4 MakeAffineMatrix(const Vector3& scale, const Vector3& rotate, const Vector3& translate)
-{
-	Matrix4x4 Scaleresult=MakeScaleMatrix(scale);
-	Matrix4x4 Rotateresult = Multiply(MakeRotateXMatrix(rotate.x), Multiply(MakeRotateYMatrix(rotate.y), MakeRotateZMatrix(rotate.z)));
-	Matrix4x4 Transformresult=MakeTranslateMatrix(translate);
-	Matrix4x4 result = Multiply(Scaleresult, Multiply(Rotateresult, Transformresult));
-
-	return result;
-}
-
-Matrix4x4 Multiply(const Matrix4x4& m1, const Matrix4x4& m2)
-{
-	Matrix4x4 result;
-
-	result.m[0][0] = m1.m[0][0] * m2.m[0][0] + m1.m[0][1] * m2.m[1][0] + m1.m[0][2] * m2.m[2][0] + m1.m[0][3] * m2.m[3][0];
-	result.m[0][1] = m1.m[0][0] * m2.m[0][1] + m1.m[0][1] * m2.m[1][1] + m1.m[0][2] * m2.m[2][1] + m1.m[0][3] * m2.m[3][1];
-	result.m[0][2] = m1.m[0][0] * m2.m[0][2] + m1.m[0][1] * m2.m[1][2] + m1.m[0][2] * m2.m[2][2] + m1.m[0][3] * m2.m[3][2];
-	result.m[0][3] = m1.m[0][0] * m2.m[0][3] + m1.m[0][1] * m2.m[1][3] + m1.m[0][2] * m2.m[2][3] + m1.m[0][3] * m2.m[3][3];
-
-	result.m[1][0] = m1.m[1][0] * m2.m[0][0] + m1.m[1][1] * m2.m[1][0] + m1.m[1][2] * m2.m[2][0] + m1.m[1][3] * m2.m[3][0];
-	result.m[1][1] = m1.m[1][0] * m2.m[0][1] + m1.m[1][1] * m2.m[1][1] + m1.m[1][2] * m2.m[2][1] + m1.m[1][3] * m2.m[3][1];
-	result.m[1][2] = m1.m[1][0] * m2.m[0][2] + m1.m[1][1] * m2.m[1][2] + m1.m[1][2] * m2.m[2][2] + m1.m[1][3] * m2.m[3][2];
-	result.m[1][3] = m1.m[1][0] * m2.m[0][3] + m1.m[1][1] * m2.m[1][3] + m1.m[1][2] * m2.m[2][3] + m1.m[1][3] * m2.m[3][3];
-
-	result.m[2][0] = m1.m[2][0] * m2.m[0][0] + m1.m[2][1] * m2.m[1][0] + m1.m[2][2] * m2.m[2][0] + m1.m[2][3] * m2.m[3][0];
-	result.m[2][1] = m1.m[2][0] * m2.m[0][1] + m1.m[2][1] * m2.m[1][1] + m1.m[2][2] * m2.m[2][1] + m1.m[2][3] * m2.m[3][1];
-	result.m[2][2] = m1.m[2][0] * m2.m[0][2] + m1.m[2][1] * m2.m[1][2] + m1.m[2][2] * m2.m[2][2] + m1.m[2][3] * m2.m[3][2];
-	result.m[2][3] = m1.m[2][0] * m2.m[0][3] + m1.m[2][1] * m2.m[1][3] + m1.m[2][2] * m2.m[2][3] + m1.m[2][3] * m2.m[3][3];
-
-	result.m[3][0] = m1.m[3][0] * m2.m[0][0] + m1.m[3][1] * m2.m[1][0] + m1.m[3][2] * m2.m[2][0] + m1.m[3][3] * m2.m[3][0];
-	result.m[3][1] = m1.m[3][0] * m2.m[0][1] + m1.m[3][1] * m2.m[1][1] + m1.m[3][2] * m2.m[2][1] + m1.m[3][3] * m2.m[3][1];
-	result.m[3][2] = m1.m[3][0] * m2.m[0][2] + m1.m[3][1] * m2.m[1][2] + m1.m[3][2] * m2.m[2][2] + m1.m[3][3] * m2.m[3][2];
-	result.m[3][3] = m1.m[3][0] * m2.m[0][3] + m1.m[3][1] * m2.m[1][3] + m1.m[3][2] * m2.m[2][3] + m1.m[3][3] * m2.m[3][3];
-
-	return  result;
-}
 
 Matrix4x4 MakePerspectiveFovMatrix(float FovY, float aspectRatio, float nearClip, float farClip)
 {
