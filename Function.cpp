@@ -292,10 +292,13 @@ void DrawSphere(const Sphere& sphere, const Matrix4x4& viewProjectionMatrix, con
 	}
 
 }
+//正射影ベクトル
 Vector3 Project(const Vector3& v1, const Vector3& v2)
 {
+
 	return Vector3();
 }
+//最近接点
 Vector3 ClosestPoint(const Vector3& point, const Vector3& segment)
 {
 	return Vector3();
