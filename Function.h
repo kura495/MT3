@@ -1,16 +1,15 @@
 #pragma once
 #include <Novice.h>
 #include<Vector3.h>
+#include"Sphere.h"
+#include"Line.h"
 #define _USE_MATH_DEFINES
 #include<math.h>
 #include<Matrix4x4.h>
 #include<cmath>
 #include<cassert>
 
-struct Sphere {
-	Vector3 center;
-	float radius;
-};
+
 Vector3 Add(const Vector3& v1, const Vector3& v2);
 Matrix4x4 MakeScaleMatrix(const Vector3& scale);
 Matrix4x4 MakeRotateXMatrix(float radian);
@@ -35,3 +34,5 @@ void MatrixScreenPrintf(int x, int y, const Matrix4x4& matrix, const char* Tag);
 void VectorScreenPrintf(int x, int y, const Vector3& vector, const char* Tag);
 void DrawGrid(const Matrix4x4& viewProjectionMatrix, const Matrix4x4& viewportMatrix); 
 void DrawSphere(const Sphere& sphere, const Matrix4x4& viewProjectionMatrix, const Matrix4x4& viewportMatrix, unsigned int color);
+Vector3 Project(const Vector3& v1, const Vector3& v2);
+Vector3 ClosestPoint(const Vector3& point, const Vector3& segment);
