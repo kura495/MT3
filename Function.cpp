@@ -6,6 +6,10 @@ Vector3 Add(const Vector3& v1, const Vector3& v2)
 Vector3 Subtract(const Vector3& v1, const Vector3& v2) {
 	return Vector3{ v1.x - v2.x, v1.y - v2.y, v1.z - v2.z };
 }
+float Length(const Vector3& v) {
+	return sqrtf(Dot(v, v));
+
+}
 Matrix4x4 MakeScaleMatrix(const Vector3& scale)
 {
 	Matrix4x4 result = {
@@ -321,7 +325,7 @@ Vector3 Project(const Vector3& v1, const Vector3& v2)
 //最近接点
 Vector3 ClosestPoint(const Vector3& point, const Segment& segment)
 {
-	float length = sqrt(segment.diff.x * segment.diff.x + segment.diff.y * segment.diff.y + segment.diff.z * segment.diff.z);
+	float length = Length(segment.diff);
 	Vector3 normaliseSegment = { segment.diff.x / length,segment.diff.y / length,segment.diff.z / length };
 
 	float distance = Dot(Subtract(point, segment.origin), normaliseSegment);
@@ -329,4 +333,11 @@ Vector3 ClosestPoint(const Vector3& point, const Segment& segment)
 	Vector3 proj = Multiply(distance, normaliseSegment);
 	return Add(segment.origin, proj);
 }
-;
+bool IsCollision(const Sphere& s1, const Sphere& s2)
+{	
+	float distance = Length(Subtract(s2.center, s1.center));
+	if (distance <= s1.radius + s2.radius) {
+		return true;
+	}
+	return false;
+}

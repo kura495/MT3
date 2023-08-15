@@ -11,6 +11,7 @@
 #include<algorithm>
 Vector3 Add(const Vector3& v1, const Vector3& v2);
 Vector3 Subtract(const Vector3& v1, const Vector3& v2);
+float Length(const Vector3& v);
 Matrix4x4 MakeScaleMatrix(const Vector3& scale);
 Matrix4x4 MakeRotateXMatrix(float radian);
 Matrix4x4 MakeRotateYMatrix(float radian);
@@ -39,3 +40,4 @@ float Dot(const Vector3& v1, const Vector3& v2);
 Vector3 Normalize(const Vector3& v1);
 Vector3 Project(const Vector3& v1, const Vector3& v2);
 Vector3 ClosestPoint(const Vector3& point, const Segment& segment);
+bool IsCollision(const Sphere& s1, const Sphere& s2);
