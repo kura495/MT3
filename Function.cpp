@@ -6,6 +6,9 @@ Vector3 Add(const Vector3& v1, const Vector3& v2)
 Vector3 Subtract(const Vector3& v1, const Vector3& v2) {
 	return Vector3{ v1.x - v2.x, v1.y - v2.y, v1.z - v2.z };
 }
+Vector3 Subtract(const Vector3& v1, const float& f1) {
+	return Vector3{ v1.x - f1, v1.y - f1, v1.z - f1 };
+}
 float Length(const Vector3& v) {
 	return sqrtf(Dot(v, v));
 
@@ -369,7 +372,7 @@ void DrawPlane(const Plane& plane, const Matrix4x4& viewProjectionMatrix, const 
 	Novice::DrawLine((int)points[3].x, (int)points[3].y, (int)points[0].x, (int)points[0].y, color);
 }
 bool IsCollision(const Sphere& s1, const Plane& p1) {
-	float distance = Dot(p1.normal, s1.center) - p1.distance;
+	float distance = Dot(Normalize(p1.normal),Subtract(s1.center,p1.distance));
 	if (std::abs(distance) <= s1.radius) {
 		return true;
 	}

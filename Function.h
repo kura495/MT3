@@ -12,6 +12,7 @@
 #include<algorithm>
 Vector3 Add(const Vector3& v1, const Vector3& v2);
 Vector3 Subtract(const Vector3& v1, const Vector3& v2);
+Vector3 Subtract(const Vector3& v1, const float& f1);
 float Length(const Vector3& v);
 Matrix4x4 MakeScaleMatrix(const Vector3& scale);
 Matrix4x4 MakeRotateXMatrix(float radian);

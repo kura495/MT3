@@ -36,7 +36,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	Sphere sphere1 = { 0.0f,0.0f, 0.0f, 0.5f };
 	int sphereColor = WHITE;
 
-	Plane plane = { {1.0f,1.0f,1.0f},1.0f };
+	Plane plane = { {0.0f,1.0f,0.0f},1.0f };
 
 	// ウィンドウの×ボタンが押されるまでループ
 	while (Novice::ProcessMessage() == 0) {
