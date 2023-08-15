@@ -35,6 +35,15 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
 	Sphere sphere = { 0.0f,0.0f, 0.0f, 1.0f };
 
+	Segment segment{ {-2.0f,-1.0f,0.0f},{3.0f,2.0f,2.0f} };
+	Vector3 point{ -1.5f,0.6f,0.6f };
+	Vector3 project = Project(Subtract(point,segment.origin),segment.diff);
+	Vector3 closestPoint = ClosestPoint(point,segment);
+	Sphere pointSphere{ point,0.01f };
+	Sphere closestPointSphere{closestPoint,0.01f};
+
+	
+
 	// ウィンドウの×ボタンが押されるまでループ
 	while (Novice::ProcessMessage() == 0) {
 		// フレームの開始
@@ -59,8 +68,14 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		ImGui::DragFloat3("CameraRotate", &cameraRotate.x, 0.01f);
 		ImGui::DragFloat3("SphereCenter", &sphere.center.x, 0.01f);
 		ImGui::DragFloat("SphereRadius", &sphere.radius, 0.01f);
-		ImGui::End();
+		
 
+		Vector3 start = Transform(Transform(segment.origin, WorldViewProjectionMatrix), viewportMatrix);
+		Vector3 end = Transform(Transform(Add(segment.origin, segment.diff), WorldViewProjectionMatrix), viewportMatrix);
+		Novice::DrawLine(int(start.x), int(start.y), int(end.x), int(end.y),WHITE);
+		ImGui::InputFloat3("Project",&project.x,"%.3f",ImGuiInputTextFlags_ReadOnly);
+		
+		ImGui::End();
 		///
 		/// ↑更新処理ここまで
 		///
@@ -70,7 +85,8 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		///
 
 		DrawGrid(WorldViewProjectionMatrix, viewportMatrix);
-		//DrawSphere(sphere, WorldViewProjectionMatrix, viewportMatrix, BLACK);
+		DrawSphere(pointSphere, WorldViewProjectionMatrix, viewportMatrix, RED);
+		DrawSphere(closestPointSphere, WorldViewProjectionMatrix, viewportMatrix, BLACK);
 
 		///
 		/// ↑描画処理ここまで

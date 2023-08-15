@@ -3,6 +3,9 @@ Vector3 Add(const Vector3& v1, const Vector3& v2)
 {
 	return Vector3(v1.x + v2.x, v1.y + v2.y, v1.z + v2.z);
 }
+Vector3 Subtract(const Vector3& v1, const Vector3& v2) {
+	return Vector3{ v1.x - v2.x, v1.y - v2.y, v1.z - v2.z };
+}
 Matrix4x4 MakeScaleMatrix(const Vector3& scale)
 {
 	Matrix4x4 result = {
@@ -53,7 +56,7 @@ Matrix4x4 MakeTranslateMatrix(const Vector3& translate)
 	};
 	return result;
 }
-Vector3 Transformed(const Vector3& vector, const Matrix4x4& matrix)
+Vector3 Transform(const Vector3& vector, const Matrix4x4& matrix)
 {
 	Vector3 result;
 	result.x = vector.x * matrix.m[0][0] + vector.y * matrix.m[1][0] + vector.z * matrix.m[2][0] + 1.0f * matrix.m[3][0];
@@ -100,6 +103,9 @@ Matrix4x4 Multiply(const Matrix4x4& m1, const Matrix4x4& m2)
 	result.m[3][3] = m1.m[3][0] * m2.m[0][3] + m1.m[3][1] * m2.m[1][3] + m1.m[3][2] * m2.m[2][3] + m1.m[3][3] * m2.m[3][3];
 
 	return  result;
+}
+Vector3 Multiply(float scalar, const Vector3& v) {
+	return { v.x * scalar,v.y * scalar,v.z * scalar };
 }
 Matrix4x4 Inverse(const Matrix4x4& m)
 {
@@ -232,8 +238,8 @@ void DrawGrid(const Matrix4x4& viewProjectionMatrix, const Matrix4x4& viewportMa
 		worldVerticles[0] = { kGridEvery * xIndex - kGridHalfwidth,0.0f,kGridHalfwidth };
 		worldVerticles[1] = { kGridEvery * xIndex - kGridHalfwidth,0.0f,-kGridHalfwidth };
 		for (uint32_t i = 0; i < 2; ++i) {
-			ndcVertices = Transformed(worldVerticles[i], viewProjectionMatrix);
-			screenVerticles[i] = Transformed(ndcVertices, viewportMatrix);
+			ndcVertices = Transform(worldVerticles[i], viewProjectionMatrix);
+			screenVerticles[i] = Transform(ndcVertices, viewportMatrix);
 		}
 		Novice::DrawLine((int)screenVerticles[0].x, (int)screenVerticles[0].y, (int)screenVerticles[1].x, (int)screenVerticles[1].y,0x0000FF);
 	}
@@ -243,8 +249,8 @@ void DrawGrid(const Matrix4x4& viewProjectionMatrix, const Matrix4x4& viewportMa
 		worldVerticles[1] = { -kGridHalfwidth,0.0f, kGridEvery * zIndex - kGridHalfwidth };
 
 		for (uint32_t i = 0; i < 2; ++i) {
-			ndcVertices = Transformed(worldVerticles[i], viewProjectionMatrix);
-			screenVerticles[i] = Transformed(ndcVertices, viewportMatrix);
+			ndcVertices = Transform(worldVerticles[i], viewProjectionMatrix);
+			screenVerticles[i] = Transform(ndcVertices, viewportMatrix);
 		}
 		Novice::DrawLine((int)screenVerticles[0].x, (int)screenVerticles[0].y,(int)screenVerticles[1].x, (int)screenVerticles[1].y,0x000000FF);
 	}
@@ -268,12 +274,12 @@ void DrawSphere(const Sphere& sphere, const Matrix4x4& viewProjectionMatrix, con
 			c = { sphere.radius * std::cosf(lat) * std::cosf(lon + kLonEvery), sphere.radius * std::sinf(lat), sphere.radius * std::cosf(lat) * std::sinf(lon + kLonEvery) };
 			c = Add(c, sphere.center);
 
-			a = Transformed(a, viewProjectionMatrix);
-			a = Transformed(a, viewportMatrix);
-			b = Transformed(b, viewProjectionMatrix);
-			b = Transformed(b, viewportMatrix);
-			c = Transformed(c, viewProjectionMatrix);
-			c = Transformed(c, viewportMatrix);
+			a = Transform(a, viewProjectionMatrix);
+			a = Transform(a, viewportMatrix);
+			b = Transform(b, viewProjectionMatrix);
+			b = Transform(b, viewportMatrix);
+			c = Transform(c, viewProjectionMatrix);
+			c = Transform(c, viewportMatrix);
 
 
 			Novice::DrawLine(
@@ -292,15 +298,35 @@ void DrawSphere(const Sphere& sphere, const Matrix4x4& viewProjectionMatrix, con
 	}
 
 }
+float Dot(const Vector3& v1, const Vector3& v2) {
+	float result = (v1.x * v2.x) + (v1.y * v2.y) + (v1.z * v2.z);
+	return result;
+}
+Vector3 Normalize(const Vector3& v1) {
+	Vector3 Result = v1;
+	float length = sqrt(v1.x * v1.x + v1.y * v1.y + v1.z * v1.z);
+	assert(length != 0);
+	Result.x /= length;
+	Result.y /= length;
+	Result.z /= length;
+	return Result;
+}
 //正射影ベクトル
 Vector3 Project(const Vector3& v1, const Vector3& v2)
 {
-
-	return Vector3();
+	Vector3 result;
+	result = Multiply(Dot(v1, Normalize(v2)), Normalize(v2));
+	return result;
 }
 //最近接点
-Vector3 ClosestPoint(const Vector3& point, const Vector3& segment)
+Vector3 ClosestPoint(const Vector3& point, const Segment& segment)
 {
-	return Vector3();
+	float length = sqrt(segment.diff.x * segment.diff.x + segment.diff.y * segment.diff.y + segment.diff.z * segment.diff.z);
+	Vector3 normaliseSegment = { segment.diff.x / length,segment.diff.y / length,segment.diff.z / length };
+
+	float distance = Dot(Subtract(point, segment.origin), normaliseSegment);
+	distance = std::clamp(distance, 0.0f, length);
+	Vector3 proj = Multiply(distance, normaliseSegment);
+	return Add(segment.origin, proj);
 }
 ;

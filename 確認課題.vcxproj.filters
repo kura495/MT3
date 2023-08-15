@@ -14,6 +14,18 @@
     <Filter Include="KamataEngine\Adapter">
       <UniqueIdentifier>{c6468eb4-788b-4a83-b207-a5f4804e56c5}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ソースファイル">
+      <UniqueIdentifier>{1ba6dd15-79f6-482c-ac99-e79ece4d11c4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダファイル">
+      <UniqueIdentifier>{8c1d0e25-657a-470c-8253-4519b809274f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソースファイル\Math">
+      <UniqueIdentifier>{94d2e0bb-70eb-4a70-8a1e-fb4f36b9e3c3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダファイル\Math">
+      <UniqueIdentifier>{c2c4e101-ffb0-4b6e-8be5-662c5068724d}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="C:\KamataEngine\DirectXGame\base\DirectXCommon.cpp">
@@ -35,7 +47,9 @@
     <ClCompile Include="C:\KamataEngine\DirectXGame\2d\ImGuiManager.cpp">
       <Filter>KamataEngine</Filter>
     </ClCompile>
-    <ClCompile Include="Function.cpp" />
+    <ClCompile Include="Function.cpp">
+      <Filter>ヘッダファイル\Math</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="C:\KamataEngine\DirectXGame\audio\Audio.h">
@@ -101,13 +115,23 @@
     <ClInclude Include="C:\KamataEngine\DirectXGame\3d\SpotLight.h">
       <Filter>KamataEngine\Include</Filter>
     </ClInclude>
-    <ClInclude Include="C:\KamataEngine\DirectXGame\math\Matrix4x4.h" />
-    <ClInclude Include="C:\KamataEngine\DirectXGame\math\Vector2.h" />
-    <ClInclude Include="C:\KamataEngine\DirectXGame\math\Vector3.h" />
-    <ClInclude Include="C:\KamataEngine\DirectXGame\math\Vector4.h" />
     <ClInclude Include="C:\KamataEngine\DirectXGame\2d\ImGuiManager.h" />
-    <ClInclude Include="Function.h" />
     <ClInclude Include="Sphere.h" />
     <ClInclude Include="Line.h" />
+    <ClInclude Include="Function.h">
+      <Filter>ソースファイル\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\KamataEngine\DirectXGame\math\Matrix4x4.h">
+      <Filter>ソースファイル\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\KamataEngine\DirectXGame\math\Vector2.h">
+      <Filter>ソースファイル\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\KamataEngine\DirectXGame\math\Vector3.h">
+      <Filter>ソースファイル\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\KamataEngine\DirectXGame\math\Vector4.h">
+      <Filter>ソースファイル\Math</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

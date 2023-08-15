@@ -1,14 +1,14 @@
-#pragma once
+ï»¿#pragma once
 #include"Vector3.h"
 struct Line {
-	Vector3 origin;//n“_
-	Vector3 diff;//I“_‚Ö‚Ì·•ªƒxƒNƒgƒ‹
+	Vector3 origin;//å§‹ç‚¹
+	Vector3 diff;//çµ‚ç‚¹ã¸ã®å·®åˆ†ãƒ™ã‚¯ãƒˆãƒ«
 };
 struct Ray {
-	Vector3 origin;//n“_
-	Vector3 diff;//I“_‚Ö‚Ì·•ªƒxƒNƒgƒ‹
+	Vector3 origin;//å§‹ç‚¹
+	Vector3 diff;//çµ‚ç‚¹ã¸ã®å·®åˆ†ãƒ™ã‚¯ãƒˆãƒ«
 };
 struct Segment {
-	Vector3 origin;//n“_
-	Vector3 diff;//I“_‚Ö‚Ì·•ªƒxƒNƒgƒ‹
+	Vector3 origin;//å§‹ç‚¹
+	Vector3 diff;//çµ‚ç‚¹ã¸ã®å·®åˆ†ãƒ™ã‚¯ãƒˆãƒ«
 };

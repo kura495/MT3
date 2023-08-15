@@ -8,17 +8,18 @@
 #include<Matrix4x4.h>
 #include<cmath>
 #include<cassert>
-
-
+#include<algorithm>
 Vector3 Add(const Vector3& v1, const Vector3& v2);
+Vector3 Subtract(const Vector3& v1, const Vector3& v2);
 Matrix4x4 MakeScaleMatrix(const Vector3& scale);
 Matrix4x4 MakeRotateXMatrix(float radian);
 Matrix4x4 MakeRotateYMatrix(float radian);
 Matrix4x4 MakeRotateZMatrix(float radian);
 Matrix4x4 MakeTranslateMatrix(const Vector3& translate);
-Vector3 Transformed(const Vector3& vector, const Matrix4x4& matrix);
+Vector3 Transform(const Vector3& vector, const Matrix4x4& matrix);
 Matrix4x4 MakeAffineMatrix(const Vector3& scale, const Vector3& rotate, const Vector3& translate);
 Matrix4x4 Multiply(const Matrix4x4& m1, const Matrix4x4& m2);
+Vector3 Multiply(float scalar, const Vector3& v);
 Matrix4x4 Inverse(const Matrix4x4& m);
 float det(const Matrix4x4& m);
 //透視投影行列
@@ -34,5 +35,7 @@ void MatrixScreenPrintf(int x, int y, const Matrix4x4& matrix, const char* Tag);
 void VectorScreenPrintf(int x, int y, const Vector3& vector, const char* Tag);
 void DrawGrid(const Matrix4x4& viewProjectionMatrix, const Matrix4x4& viewportMatrix); 
 void DrawSphere(const Sphere& sphere, const Matrix4x4& viewProjectionMatrix, const Matrix4x4& viewportMatrix, unsigned int color);
+float Dot(const Vector3& v1, const Vector3& v2);
+Vector3 Normalize(const Vector3& v1);
 Vector3 Project(const Vector3& v1, const Vector3& v2);
-Vector3 ClosestPoint(const Vector3& point, const Vector3& segment);
+Vector3 ClosestPoint(const Vector3& point, const Segment& segment);
