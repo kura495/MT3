@@ -2,6 +2,7 @@
 #include <Novice.h>
 #include<Vector3.h>
 #include"Sphere.h"
+#include"Plane.h"
 #include"Line.h"
 #define _USE_MATH_DEFINES
 #include<math.h>
@@ -41,3 +42,6 @@ Vector3 Normalize(const Vector3& v1);
 Vector3 Project(const Vector3& v1, const Vector3& v2);
 Vector3 ClosestPoint(const Vector3& point, const Segment& segment);
 bool IsCollision(const Sphere& s1, const Sphere& s2);
+Vector3 Perpendicular(const Vector3& vector);
+void DrawPlane(const Plane& plane, const Matrix4x4& viewProjectionMatrix, const Matrix4x4& viewportMatrix, unsigned int color);
+bool IsCollision(const Sphere& s1, const Plane& p1);
