@@ -11,11 +11,6 @@ const char kWindowTitle[] = "LE2B_11_クラモト_アツシ_MT3";
 int kWindowWidth = 1280;
 int kWindowHeight = 720;
 
-
-Vector3 vector1{ 1.2f,-3.9f,2.5f };
-Vector3 vector2{ 2.8f,0.4f,-1.3f };
-Vector3 cross = Cross(vector1, vector2);
-
 Vector3 screenVertices[3];
 
 // Windowsアプリでのエントリーポイント(main関数)
@@ -34,16 +29,11 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	Vector3 cameraTranslate{ 0.0f,1.0f,-6.49f };
 
 	Sphere sphere1 = { 0.0f,0.0f, 0.0f, 0.5f };
-	int sphereColor = WHITE;
+	int Color = WHITE;
 
 	Plane plane = { {0.0f,1.0f,0.0f},1.0f };
 
-	Segment segment{ {-2.0f,-1.0f,0.0f},{3.0f,2.0f,2.0f} };
-	Vector3 point{ -1.5f,0.6f,0.6f };
-	Vector3 project = Project(Subtract(point, segment.origin), segment.diff);
-	Vector3 closestPoint = ClosestPoint(point, segment);
-	Sphere pointSphere{ point,0.01f };
-	Sphere closestPointSphere{ closestPoint,0.01f };
+	Segment segment{ {0.0f,0.0f,0.0f},{0.0f,1.0f,0.0f} };
 
 	// ウィンドウの×ボタンが押されるまでループ
 	while (Novice::ProcessMessage() == 0) {
@@ -66,17 +56,16 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		ImGui::Begin("window");
 		ImGui::DragFloat3("CameraTranslate", &cameraTranslate.x, 0.01f);
 		ImGui::DragFloat3("CameraRotate", &cameraRotate.x, 0.01f);
-		//スフィアのImGui
-		ImGui::DragFloat3("Sphere1Center", &sphere1.center.x, 0.01f);
-		ImGui::DragFloat("Sphere1Radius", &sphere1.radius, 0.01f);
 		//PlaneのImGui
 		ImGui::DragFloat3("PlaneCenter", &plane.normal.x, 0.01f);
-
+		ImGui::DragFloat3("segment origin", &segment.origin.x, 0.01f);
+		Vector3 start = Transform(Transform(segment.origin, WorldViewProjectionMatrix), viewportMatrix);
+		Vector3 end = Transform(Transform(Add(segment.origin, segment.diff), WorldViewProjectionMatrix), viewportMatrix);
 		if (IsCollision(segment,plane)==true) {
-			sphereColor = RED;
+			Color = RED;
 		}
 		else {
-			sphereColor = WHITE;
+			Color = WHITE;
 		}
 		ImGui::End();
 		///
@@ -86,8 +75,9 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		///
 		/// ↓描画処理ここから
 		///
-
+		
 		DrawGrid(WorldViewProjectionMatrix, viewportMatrix);
+		Novice::DrawLine(int(start.x), int(start.y), int(end.x), int(end.y), Color);
 		DrawPlane(plane, WorldViewProjectionMatrix, viewportMatrix, WHITE);
 		
 

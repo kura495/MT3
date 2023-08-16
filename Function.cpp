@@ -382,7 +382,7 @@ bool IsCollision(const Sphere& s1, const Plane& p1) {
 }
 bool IsCollision(const Segment& segment, const Plane& plane)
 {
-	float dot = Dot(plane.normal,segment.diff);
+	float dot = Dot(segment.diff,plane.normal);
 	//垂直=平行であるので、衝突しているはずがない
 	if (dot == 0.0f) {
 		return false;
@@ -390,9 +390,8 @@ bool IsCollision(const Segment& segment, const Plane& plane)
 	//tを求める
 	float t = (plane.distance - Dot(segment.origin,plane.normal) / dot);
 	//tの値と線の種類によって衝突しているかを判定
-	if (t < 0 || t > 1.0f) {
-		return false;
+	if (0.0f <= t && t <= 1.0f) {
+		return true;
 	}
-	return 
-
+	return false;
 }
