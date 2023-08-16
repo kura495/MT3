@@ -38,6 +38,13 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
 	Plane plane = { {0.0f,1.0f,0.0f},1.0f };
 
+	Segment segment{ {-2.0f,-1.0f,0.0f},{3.0f,2.0f,2.0f} };
+	Vector3 point{ -1.5f,0.6f,0.6f };
+	Vector3 project = Project(Subtract(point, segment.origin), segment.diff);
+	Vector3 closestPoint = ClosestPoint(point, segment);
+	Sphere pointSphere{ point,0.01f };
+	Sphere closestPointSphere{ closestPoint,0.01f };
+
 	// ウィンドウの×ボタンが押されるまでループ
 	while (Novice::ProcessMessage() == 0) {
 		// フレームの開始
@@ -65,7 +72,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		//PlaneのImGui
 		ImGui::DragFloat3("PlaneCenter", &plane.normal.x, 0.01f);
 
-		if (IsCollision(sphere1,plane)==true) {
+		if (IsCollision(segment,plane)==true) {
 			sphereColor = RED;
 		}
 		else {
@@ -82,7 +89,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
 		DrawGrid(WorldViewProjectionMatrix, viewportMatrix);
 		DrawPlane(plane, WorldViewProjectionMatrix, viewportMatrix, WHITE);
-		DrawSphere(sphere1, WorldViewProjectionMatrix, viewportMatrix, sphereColor);
+		
 
 		///
 		/// ↑描画処理ここまで
