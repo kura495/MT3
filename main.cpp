@@ -33,8 +33,6 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
 	Plane plane = { {0.0f,1.0f,0.0f},1.0f };
 
-	Segment segment{ {0.0f,0.0f,0.0f},{0.0f,1.0f,0.0f} };
-
 	// ウィンドウの×ボタンが押されるまでループ
 	while (Novice::ProcessMessage() == 0) {
 		// フレームの開始
@@ -59,11 +57,8 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		//PlaneのImGui
 		ImGui::DragFloat3("Plane.Normal", &plane.normal.x, 0.01f);
 		ImGui::DragFloat("Plane.Distance", &plane.distance, 0.01f);
-		ImGui::DragFloat3("Segment.Origin", &segment.origin.x, 0.01f);
-		ImGui::DragFloat("Segment.Diff", &segment.diff.x, 0.01f);
-		Vector3 start = Transform(Transform(segment.origin, WorldViewProjectionMatrix), viewportMatrix);
-		Vector3 end = Transform(Transform(Add(segment.origin, segment.diff), WorldViewProjectionMatrix), viewportMatrix);
-		if (IsCollision(segment,plane)==true) {
+		
+		if (IsCollision(,plane)==true) {
 			Color = RED;
 		}
 		else {
@@ -80,7 +75,6 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		///
 		
 		DrawGrid(WorldViewProjectionMatrix, viewportMatrix);
-		Novice::DrawLine(int(start.x), int(start.y), int(end.x), int(end.y), Color);
 		DrawPlane(plane, WorldViewProjectionMatrix, viewportMatrix, WHITE);
 		
 

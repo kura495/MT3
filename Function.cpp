@@ -395,3 +395,62 @@ bool IsCollision(const Segment& segment, const Plane& plane)
 	}
 	return false;
 }
+
+void DrawTriAngle(const TriAngle& triangle, const Matrix4x4& viewProjectionMatrix, const Matrix4x4& viewportMatrix, unsigned int color)
+{
+	Vector3 verticle[3];
+	for (int i = 0; i < 3; i++) {
+		verticle[i] = Transform(Transform(triangle.vertices[i], viewProjectionMatrix), viewportMatrix);
+	}
+	Novice::DrawTriangle((int)verticle[0].x, (int)verticle[0].y, (int)verticle[1].x, (int)verticle[1].y, (int)verticle[2].x, (int)verticle[2].y, color, kFillModeWireFrame);
+}
+
+bool IsCollision(const Segment& segment, const TriAngle& triangle)
+{
+	//TriAngleから面を作る
+	Plane plane{};
+	plane.normal =
+		Normalize(
+			Cross(
+				Subtract(triangle.vertices[1], triangle.vertices[0]),
+				Subtract(triangle.vertices[2], triangle.vertices[1])
+			)
+		);
+
+	plane.distance = Dot(triangle.vertices[0], plane.normal);
+
+	float dot = Dot(plane.normal, segment.diff);
+
+	if (dot == 0.0f) {
+		return false;
+	}
+	float t = (plane.distance - Dot(segment.origin, plane.normal)) / dot;
+
+	if (0.0f < t && t < 1.0f) {
+		Vector3 p = Add(segment.origin, Multiply(t, segment.diff));
+
+
+		Vector3 cross01 = Cross(
+			Subtract(triangle.vertices[1], triangle.vertices[0]),
+			Subtract(p, triangle.vertices[1])
+		);
+		Vector3 cross12 = Cross(
+			Subtract(triangle.vertices[2], triangle.vertices[1]),
+			Subtract(p, triangle.vertices[2])
+		);
+		Vector3 cross20 = Cross(
+			Subtract(triangle.vertices[0], triangle.vertices[2]),
+			Subtract(p, triangle.vertices[0])
+		);
+
+
+		if (Dot(cross01, plane.normal) >= 0.0f &&
+			Dot(cross12, plane.normal) >= 0.0f &&
+			Dot(cross20, plane.normal) >= 0.0f) {
+			return true;
+		}
+
+	}
+
+	return false;
+}
