@@ -138,5 +138,9 @@
     <ClInclude Include="Sphere.h">
       <Filter>ソースファイル\Math</Filter>
     </ClInclude>
+    <ClInclude Include="TriAngle.h" />
+    <ClInclude Include="AABB.h">
+      <Filter>ソースファイル\Math</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
