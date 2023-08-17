@@ -31,7 +31,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	Sphere sphere1 = { 0.0f,0.0f, 0.0f, 0.5f };
 	int Color = WHITE;
 
-	Segment segment{ { 0.0f, 0.0f, 0.0f }, {0.0f,1.0f,0.0f} };
+	Segment segment{ { 0.0f, 0.0f, -1.0f }, {1.0f,1.0f,0.0f} };
 	TriAngle triangle;
 	triangle.vertices[0] = { -1.0f, 0.0f, 0.0f };
 	triangle.vertices[1] = { 0.0f, 1.0f, 0.0f };
