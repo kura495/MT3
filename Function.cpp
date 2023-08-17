@@ -404,7 +404,6 @@ void DrawTriAngle(const TriAngle& triangle, const Matrix4x4& viewProjectionMatri
 	}
 	Novice::DrawTriangle((int)verticle[0].x, (int)verticle[0].y, (int)verticle[1].x, (int)verticle[1].y, (int)verticle[2].x, (int)verticle[2].y, color, kFillModeWireFrame);
 }
-
 bool IsCollision(const Segment& segment, const TriAngle& triangle)
 {
 	//TriAngleから面を作る

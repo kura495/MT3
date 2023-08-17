@@ -1,5 +1,5 @@
-#pragma once
+ï»¿#pragma once
 #include"Vector3.h"
 struct TriAngle {
-	Vector3 vertices[3];//’¸“_
+	Vector3 vertices[3];//é ‚ç‚¹
 };
