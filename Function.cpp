@@ -499,3 +499,18 @@ bool IsCollision(const AABB& aabb1, const AABB& aabb2) {
 	return false;
 
 }
+bool IsCollision(const AABB& aabb, const Sphere& sphere) {
+	//最近接点
+	Vector3 clossestPoint;
+	clossestPoint.x = std::clamp(sphere.center.x, aabb.min.x, aabb.max.x);
+	clossestPoint.y = std::clamp(sphere.center.y, aabb.min.y, aabb.max.y);
+	clossestPoint.z = std::clamp(sphere.center.z, aabb.min.z, aabb.max.z);
+
+	float distance = Length(Subtract(clossestPoint, sphere.center));
+	if (distance <= sphere.radius) {
+		return true;
+	}
+
+	return false;
+
+}

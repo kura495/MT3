@@ -30,12 +30,12 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
 	int color = WHITE;
 
-	AABB aabb1;
-		aabb1.min = { -1.0f, -0.5f, -0.5f };
-		aabb1.max = { 0.0f, 0.5f, 0.5f };
-		AABB aabb2;
-		aabb2.min = { 0.2f, 0.0f, 0.0f };
-		aabb2.max = { 1.0f, 1.0f, 1.0f };
+	AABB aabb;
+	aabb.min = { -1.0f, -0.5f, -0.5f };
+	aabb.max = { 0.0f, 0.5f, 0.5f };
+	Sphere sphere;
+	sphere.center = { 1.0f,1.0f,0.0f };
+	sphere.radius = 0.5f;
 
 	// ウィンドウの×ボタンが押されるまでループ
 	while (Novice::ProcessMessage() == 0) {
@@ -58,11 +58,11 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		ImGui::Begin("window");
 		ImGui::DragFloat3("CameraTranslate", &cameraTranslate.x, 0.01f);
 		ImGui::DragFloat3("CameraRotate", &cameraRotate.x, 0.01f);
-		ImGui::DragFloat3("AABB1min", &aabb1.min.x, 0.1f, -1.0f, 5.0f);
-		ImGui::DragFloat3("AABB1max", &aabb1.max.x, 0.1f, -1.0f, 5.0f);
-		ImGui::DragFloat3("AABB2min", &aabb2.min.x, 0.1f, -1.0f, 5.0f);
-		ImGui::DragFloat3("AABB2max", &aabb2.max.x, 0.1f, -1.0f, 5.0f);
-		if (IsCollision(aabb1, aabb2)==true) {
+		ImGui::DragFloat3("AABB1min", &aabb.min.x, 0.1f, -1.0f, 5.0f);
+		ImGui::DragFloat3("AABB1max", &aabb.max.x, 0.1f, -1.0f, 5.0f);
+		ImGui::DragFloat3("sphereCenter", &sphere.center.x, 0.1f, -1.0f, 5.0f);
+		ImGui::DragFloat("sphereRadius", &sphere.radius, 0.1f, -1.0f, 5.0f);
+		if (IsCollision(aabb, sphere)==true) {
 			color = RED;
 		}
 		else {
@@ -78,8 +78,8 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		///
 		
 		DrawGrid(WorldViewProjectionMatrix, viewportMatrix);
-		DrawAABB(aabb1, WorldViewProjectionMatrix, viewportMatrix, color);
-		DrawAABB(aabb2, WorldViewProjectionMatrix, viewportMatrix, WHITE);
+		DrawAABB(aabb, WorldViewProjectionMatrix, viewportMatrix, color);
+		DrawSphere(sphere, WorldViewProjectionMatrix, viewportMatrix, WHITE);
 
 		///
 		/// ↑描画処理ここまで

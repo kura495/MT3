@@ -53,3 +53,4 @@ void DrawTriAngle(const TriAngle& triangle, const Matrix4x4& viewProjectionMatri
 bool IsCollision(const Segment& segment, const TriAngle& triangle);
 void DrawAABB(const AABB& aabb, const Matrix4x4& viewProjection, const Matrix4x4& viewport, uint32_t color);
 bool IsCollision(const AABB& aabb1, const AABB& aabb2);
+bool IsCollision(const AABB& aabb, const Sphere& sphere);
